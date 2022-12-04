@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+ proyecto-servicios01:
+  container_name: 'proyecto-servicios01'
+  image: luis1997fer/proyecto-servicios:v1
+  ports:
+   - "3000"
+  networks:
+   - proyecto
+  environment:
+   CONTAINER_HOST: proyecto-servicios01
+ proyecto-servicios02:
+  container_name: 'proyecto-servicios02'
+  image: luis1997fer/proyecto-servicios:v1
+  ports:
+   - "3000"
+  networks:
+   - proyecto
+  environment:
+   CONTAINER_HOST: proyecto-servicios02
+ load-balancer-luis:
+  container_name: 'load-balancer-luis'
+  image: load-balancer-luis:v1
+  build:
+   context: ./load-balancer
+  ports:
+   - "6073:80"
+  networks:
+   - proyecto
+  depends_on:
+   - proyecto-servicios01
+   - proyecto-servicios02
+  restart: always
+networks:
+ proyecto:
